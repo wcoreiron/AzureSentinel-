@@ -1,0 +1,7 @@
+# AzureSentinel-
+Analytic Rules
+// Computers With Cleaned Event Logs 
+// Computers with cleaned event logs. 
+SecurityEvent
+| where EventID in (1102, 517) and EventSourceName == 'Microsoft-Windows-Eventlog'
+| summarize count() by Computer
