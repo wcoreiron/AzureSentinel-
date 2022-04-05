@@ -1,0 +1,8 @@
+# AzureSentinel-
+Analytic Rules
+// Unauthorized Users 
+// Get a list of unauthorized users with their request count in last 24 hours. 
+LAQueryLogs
+| where ResponseCode == "403"
+| summarize reqCount = count() by AADObjectId
+| order by reqCount desc
