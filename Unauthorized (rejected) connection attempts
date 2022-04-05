@@ -1,0 +1,9 @@
+# AzureSentinel-
+Analytic Rules
+// Unauthorized connections 
+// Search for unauthorized (rejected) connection attempts. 
+// To create an alert for this query, click '+ New alert rule'
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.DBFORPOSTGRESQL" 
+| where Category == "PostgreSQLLogs"
+| where Message contains "password authentication failed" or Message contains "no pg_hba.conf entry for host"
