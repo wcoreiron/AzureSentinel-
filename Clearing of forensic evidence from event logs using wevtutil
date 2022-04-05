@@ -1,0 +1,17 @@
+# AzureSentinel-
+Analytic Rules
+// # Clearing of forensic evidence from event logs using wevtutil
+// 
+// This query checks for attempts to clear at least 10 log entries from event logs using wevtutil.
+// 
+// This query was updated on 2021-05-19 from https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries/tree/master/Ransomware/Clearing%20of%20forensic%20evidence%20from%20event%20logs%20using%20wevtutil.md
+// Look for use of wevtutil to clear multiple logs
+DeviceProcessEvents
+| where Timestamp > ago(1d)
+| where ProcessCommandLine has "WEVTUTIL" and ProcessCommandLine has "CL"
+| summarize
+    LogClearCount = dcount(ProcessCommandLine),
+    ClearedLogList = make_set(ProcessCommandLine)
+    by DeviceId, bin(Timestamp, 5m)
+| where LogClearCount > 10
+
