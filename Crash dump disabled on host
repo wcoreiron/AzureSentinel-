@@ -1,0 +1,13 @@
+# AzureSentinel-
+Analytic Rules
+//This detection looks the prevention of crash dumps being created. 
+//This can be used to limit reporting by malware, look for suspicious processes setting this registry key.
+
+SecurityEvent
+| where EventID == 4657
+| parse ObjectName with "\\REGISTRY\\" KeyPrefix "\\" RegistryKey
+| project-reorder RegistryKey
+| where RegistryKey has "SYSTEM\\CurrentControlSet\\Control\\CrashControl"
+| where ObjectValueName =~ "CrashDumpEnabled"
+| extend RegistryValueData = iff (OperationType == "%%1906", OldValue, NewValue)
+| where RegistryValueData == 0
